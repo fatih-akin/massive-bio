@@ -15,9 +15,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-//         $schedule->command('exchanges:fetch')
-//             ->everyFifteenMinutes()
-//             ->runInBackground();
+         $schedule->command('exchanges:fetch')
+             ->everyFifteenMinutes()
+             ->runInBackground();
     }
 
     /**
