@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [\App\Http\Controllers\AuthenticationController::class, 'login']);
 Route::post('/register', [\App\Http\Controllers\AuthenticationController::class, 'register']);
+Route::get('/exchange-rates/fetch', [\App\Http\Controllers\ExchangeRateController::class, 'fetch']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
