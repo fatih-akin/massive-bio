@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RequestedExchangeRateEvent;
 use App\Http\Requests\ExchangeRequest;
 use App\Http\Requests\FindRateRequest;
 use App\Http\Requests\ShowRateRequest;
@@ -12,6 +13,7 @@ use App\Services\ExchangeRateService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
@@ -26,9 +28,10 @@ class ExchangeRateController extends Controller
     }
 
     public function show(ShowRateRequest $request){
-        return new ExchangeRateResource(
-            $this->exchangeRateRepository->findByCurrency($request->validated('currency'))
-        );
+        $exchangeRate = $this->exchangeRateRepository->findByCurrency($request->validated('currency'));
+        event(new RequestedExchangeRateEvent(Auth::user(), $exchangeRate));
+
+        return new ExchangeRateResource($exchangeRate);
     }
 
     public function exchange(ExchangeRequest $request){
