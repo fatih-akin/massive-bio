@@ -57,4 +57,11 @@ class ExchangeRateService
             return $response;
         }
     }
+
+    public static function exchange($fromCurrency, $toCurrency, $amount){
+        $exchangeRepository = new ExchangeRateRepository();
+        $from = $exchangeRepository->findByCurrency($fromCurrency);
+        $to = $exchangeRepository->findByCurrency($toCurrency);
+        return round(($amount/$from->rate)*$to->rate, 2);
+    }
 }

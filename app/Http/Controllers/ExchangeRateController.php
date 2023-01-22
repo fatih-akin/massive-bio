@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ExchangeRequest;
+use App\Http\Requests\FindRateRequest;
+use App\Http\Requests\ShowRateRequest;
+use App\Http\Resources\ExchangeRateResource;
 use App\Models\ExchangeRate;
 use App\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
 use App\Services\ExchangeRateService;
@@ -21,12 +25,13 @@ class ExchangeRateController extends Controller
         $this->exchangeRateRepository = $exchangeRateRepository;
     }
 
-    public function fetch(Request $request){
-        Log::info('Handled Command');
-        $exchangeRateService = new ExchangeRateService();
-        $exchangeRateService->storeExchangeRates();
-        Log::info('Finished Scheduling');
+    public function show(ShowRateRequest $request){
+        return new ExchangeRateResource(
+            $this->exchangeRateRepository->findByCurrency($request->validated('currency'))
+        );
+    }
 
-
+    public function exchange(ExchangeRequest $request){
+        return  ExchangeRateService::exchange($request->validated('from') , $request->validated('to'), $request->validated('amount'));
     }
 }
